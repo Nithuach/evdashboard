@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>EVsOnTheGo</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="EVsOnTheGo" name="keywords">
+    <meta content="EVsOnTheGo" name="description">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet"> 
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Libraries Stylesheet -->
+    <link href="lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="apple-touch-icon" href="favicon.ico">
+    <!-- Include PapaParse for CSV parsing -->  
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Sidebar Start -->
+        <div class="sidebar pb-3">
+            <nav class="navbar bg-secondary navbar-dark">
+                <a href="#" class="navbar-brand mx-4 mb-3">
+                    <div class="main-logo">
+                        <img src="img/mainlogo.jpeg" alt="">
+                    </div>
+                </a>
+                <div class="d-flex align-items-center ms-4 mb-4">
+                    <div class="position-relative">
+                        <!-- <div id="profileImage" class="rounded-circle"></div> -->
+                        <img class="rounded-circle" src="img/usr.png" alt="" style="width: 40px; height: 40px;">
+                        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                    </div>
+                    <div class="ms-3">
+                        <h5 class="mb-0"></h5>
+                    </div> 
+                </div>
+                <div class="navbar-nav w-100">
+                    <a href="#" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="#" class="nav-item nav-link" id="lineChartLink"><i class="fa fa-chart-line me-2"></i>Line Chart</a>
+                    <a href="#" class="nav-item nav-link" id="barChartLink"><i class="fa fa-chart-bar me-2"></i>Bar Chart</a>
+                    <a href="#" class="nav-item nav-link" id="tableLink"><i class="fa fa-table me-2"></i>Table</a>
+                    <a href="#" class="nav-item nav-link" id="pieChartLink"><i class="fa fa-chart-pie me-2"></i>Pie Chart</a>
+                    <a href="#" class="nav-item nav-link" id="otherLink"><i class="fa fa-cogs me-2"></i>Others</a>
+                </div>                
+            </nav>
+        </div>
+        <!-- Sidebar End -->
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
+                <a href="#" class="d-flex d-lg-none me-4">
+                    <div class="minim-logo">
+                        <img src="img/evlg.png" alt="">
+                    </div>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+                
+                <div class="navbar-nav align-items-center ms-auto">            
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fa fa-envelope me-lg-2"></i>
+                            <span class="d-none d-lg-inline-flex">Notification</span>
+                            <span class="msg-pointer"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">    
+                            <a href="#" class="dropdown-item">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle" src="img/usr.png" alt="" style="width: 40px; height: 40px;">
+                                    <div class="ms-2">
+                                        <h6 class="fw-normal mb-0"> No new Notification</h6>
+                                        <small style="opacity: 0.6;"></small>
+                                        <small class="text-muted"></small>
+                                    </div>
+                                </div>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-center">No messages</a>
+                            <a href="" class="dropdown-item text-center" style="color:#16eb5a">See all messages</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <!-- <div id="profileImage1" class="rounded-circle"></div> -->
+                            <img class="rounded-circle me-lg-2" src="img/usr.png" alt="" style="width: 40px; height: 40px;">
+                            <span class="d-none d-lg-inline-flex"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">Edit Profile</a>
+                            <a href="#" class="dropdown-item">Sign Out</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
+
+            <!-- Form Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="ev-dash">
+                    <div class="dash-welcome">
+                        <h1>Electric Vehicle Insights</h1>
+                        <p>Your gateway to understanding electric vehicle data and trends</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3" >
+                            <div class="ev-dash-box">
+                                <div class="ev-dash-box__left"style="margin-top: 15px;">
+                                    <div class="ev-dash-icon">
+                                        <img src="img/dash-icons/service.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="ev-dash-box__right"style="margin-top: 15px;">
+                                    <span></span>
+                                    <h4>EV Service Request</h4>
+                                    <a href="#">Service Request</a>
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="ev-dash-box">
+                                <div class="ev-dash-box__left">
+                                    <div class="ev-dash-icon">
+                                    <img src="img/dash-icons/tracking.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="ev-dash-box__right">
+                                    <span></span>
+                                    <h4>Track EV Maintenance</h4>
+                                    <a href="#" aria-disabled="true" disabled>Check Maintenance Status</a>
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="ev-dash-box">
+                                <div class="ev-dash-box__left">
+                                    <div class="ev-dash-icon">
+                                    <img src="img/dash-icons/charge.png" alt="">  
+                                    </div>
+                                </div>
+                                <div class="ev-dash-box__right">
+                                    <span></span>
+                                    <h4>EV Charging Issue</h4>
+                                    <a href="#">Report Charging Issue</a>
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="ev-dash-box">
+                                <div class="ev-dash-box__left">
+                                    <div class="ev-dash-icon">
+                                    <img src="img/dash-icons/energy.png " alt="">
+                                    </div>
+                                </div>
+                                <div class="ev-dash-box__right">
+                                    <span></span>
+                                    <h4>Monitor EV Energy Usage</h4>
+                                    <a href="#" aria-disabled="true" disabled>View Energy Consumption</a>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="container pt-4 mt-4">
+                    <div class="row text-center">
+                    <div class="col-md-4">
+                        <div class="summary-card">
+                        <h2>Total EVs in Market</h2>
+                        <p id="totalEVs">1,234</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="summary-card">
+                        <h2>EVs by Region</h2>
+                        <p id="evRegion">North America: 6,789</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="summary-card">
+                        <h2>Charging Stations Available</h2>
+                        <p id="chargingStations">3,456</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container mt-4">
+                    <label for="csv-file" class="custom-file-label">Choose a CSV File</label>
+                    <input type="file" id="csv-file" accept=".csv" class="input-csv">
+                </div>
+    
+                <div class="container pt-4 mt-4" id="lineChartContainer">
+                    <div class="row text-center">
+                        <div class="col-md-6">
+                            <div class="chart-item chart-item-left">
+                                <h3>Ev Metrics Line Chart</h3>
+                                <p class="chart-description">This chart displays a line graph of data trends over time.</p>
+                                <div style="width: 100%; max-width: 400px; margin: 0 auto;">
+                                    <!-- <canvas class="line-canvas" id="lineChart"></canvas> -->
+                                    <canvas class="line-canvas" id="lineChart" width="400" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                
+                        <div class="col-md-6">
+                            <div class="chart-item chart-item-right">
+                                <h3>EV Metrics Line Chart  <i class="fas fa-chart-line"></i></h3>
+                                <p class="chart-description">
+                                    This chart displays the trend of Electric Range and Base MSRP over different model years or other categorized data. It helps visualize performance and pricing trends.
+                                </p>
+                                <p class="info">
+                                    <i class="fas fa-info-circle"></i> The chart visualizes the variation in electric range and vehicle price over the years or by region, highlighting trends.
+                                </p>
+                                <div class="additional-info">
+                                    <div class="info-item">
+                                        <i class="fas fa-table"></i>
+                                        <span>Data Categories: Model Year, Electric Range, Base MSRP</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-history"></i>
+                                        <span>Time-Dependent Data: Visualizing changes over the years</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-wrench"></i>
+                                        <span>Customizable Axes: X-axis for Model Year, Y-axis for Range/Price</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+
+                <div class="bar-heading" id="barChartContainer">
+                    <h3>EV Metrics Bar Chart  <i class="fas fa-chart-bar"></i></h3>
+                </div>
+                
+                <div class="container pt-4 mt-4">
+                    <div class="row text-center d-flex flex-wrap">
+                        <!-- First Chart Item -->
+                        <div class="col-md-6 col-sm-12">
+                            <div class="chart-item chart-item-right">
+                                <h3 class="bar-heading">EV Metrics Bar Chart <i class="fas fa-chart-bar"></i></h3>
+                                <p class="chart-description">
+                                    This chart displays a bar graph comparing electric vehicle types, range, or price across different states or cities.
+                                </p>
+                                <p class="info">
+                                    <i class="fas fa-info-circle"></i>This visualization helps compare the number of electric vehicles, their electric range, or base MSRP across various categories.
+                                </p>
+                                <div class="additional-info">
+                                    <div class="info-item">
+                                        <i class="fas fa-tasks"></i>
+                                        <span>Data Categories: EV Type, Model Year, Base MSRP</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-clock"></i>
+                                        <span>Time-Dependent Data: Compare metrics over multiple years</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-cogs"></i>
+                                        <span>Customizable Axes: X-axis for State/City, Y-axis for EV Type or MSRP</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Second Chart Item -->
+                        <div class="col-md-6 col-sm-12">
+                            <div class="chart-item chart-item-right">
+                                <h3 class="bar-heading">EV Metrics Bar Chart</h3>
+                                <p class="chart-description">This chart displays a bar graph comparing electric vehicle data, like Base MSRP or Electric Range, across different states or cities.
+                                    .</p>
+                                <div style="width: 100%; max-width: 400px; margin: 0 auto;">
+                                    <canvas class="bar-can" id="barChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+
+                <div class="table-heading" id="tableChartContainer">
+                    <h3>EV Vehicle Data Table  <i class="fas fa-chart-bar"></i></h3>
+                    <p class="tbl-p">View detailed information about electric vehicles across various regions. This table includes key attributes such as VIN, County, City, Model Year, Make, Electric Range, Base MSRP, and more. Use this table to analyze data trends and insights in more detail.                        <p>
+                </div>
+
+                <!-- Table to display EV data -->
+                <div class="row pt-4 mt-4">
+                    <div class="table-container">
+                        <table class="table table-striped" id="data-table">
+                            <thead>
+                                <tr>
+                                    <th>VIN (1-10)</th>
+                                    <th>County</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>Postal Code</th>
+                                    <th>Model Year</th>
+                                    <th>Make</th>
+                                    <th>Model</th>
+                                    <th>Electric Vehicle Type</th>
+                                    <th>Clean Alternative, Fuel Vehicle (CAFV) Eligibility</th>
+                                    <th>Electric Range</th>
+                                    <th>Base MSRP</th>
+                                    <th>Legislative District</th>
+                                    <th>DOL Vehicle ID</th>
+                                    <th>Vehicle Location</th>
+                                    <th>Electric Utility</th>
+                                    <th>2020 Census Tract</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="pagination">
+                    <button id="prev-page" class="btn-prev">Previous</button>
+                    <button id="next-page" class="btn-next">Next</button>
+                </div>
+                
+
+                <div class="pie-heading" id="pieChartContainer">
+                    <h3>EV Data Pie Chart <i class="fas fa-chart-bar"></i></h3>
+                </div>
+
+                <div class="container pt-4 mt-4">
+                    <div class="row text-center">
+                        <div class="col-md-6">
+                            <div class="chart-item chart-item-right">
+                                <h3>EV Data Pie Chart <i class="fas fa-chart-pie"></i></h3>
+                                <p class="chart-description">
+                                    A pie chart is an effective way to visualize the distribution of categories in a dataset. Each slice represents a part of the whole, making it easy to compare categories at a glance.
+                                </p>
+                                <p class="info">
+                                    <i class="fas fa-info-circle"></i> Pie charts are visually appealing and straightforward, making them great for displaying proportional data or comparing relative sizes of categories.
+                                </p>
+                                <div class="additional-info">
+                                    <div class="info-item">
+                                        <i class="fas fa-chart-area"></i>
+                                        <span>Visualize Percentages</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-palette"></i>
+                                        <span>Easy to Customize</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-percentage"></i>
+                                        <span>Dynamic Updates</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="chart-item chart-item-right"> 
+                                <h3>Distribution of EV Models</h3> 
+                                <p class="chart-description">The pie chart below displays the distribution of various EV models within the current dataset. It helps to quickly assess the market share of each model.</p>
+                                <canvas id="pieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="other-heading" id="otherContainer">
+                    <h3>Global Benefits of Electric Vehicles <i class="fas fa-globe"></i></h3>
+                </div>
+                
+                <div class="row text-center">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                        <div class="other-card">
+                            <h2>Environment</h2>
+                            <p><i class="fas fa-leaf"></i> LessEmission</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                        <div class="other-card">
+                            <h2>Cost</h2>
+                            <p><i class="fas fa-dollar-sign"></i> Lower</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                        <div class="other-card">
+                            <h2>Health</h2>
+                            <p><i class="fas fa-heartbeat"></i> Air</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                        <div class="other-card">
+                            <h2>Innovation</h2>
+                            <p><i class="fas fa-robot"></i> NewTech</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                        <div class="other-card">
+                            <h2>Energy</h2>
+                            <p><i class="fas fa-solar-panel"></i> Less Oil</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                        <div class="other-card">
+                            <h2>Growth</h2>
+                            <p><i class="fas fa-seedling"></i> Popularity</p>
+                        </div>
+                    </div>
+                </div>                  
+            </div>
+
+            <!-- Footer Start -->
+            <div class="pt-4">
+                <div class="bg-secondary p-4">
+                    <div class="row footer-content">
+                        <div class="col-12 col-sm-6 text-center text-sm-start">2025
+                            &copy; <a href="#">EVsOnTheGo</a>, All Right Reserved.  
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer End -->
+        </div>
+        <!-- Content End -->
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+</body>
+</html>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="lib/chart/chart.min.js"></script>
+<script src="lib/easing/easing.min.js"></script>
+<script src="lib/waypoints/waypoints.min.js"></script>
+<script src="lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="lib/tempusdominus/js/moment.min.js"></script>
+<script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+<!-- Template Javascript -->
+<script src="js/main.js"></script>
+
+<script>
+let currentPage = 1;
+const rowsPerPage = 100;
+let parsedData = [];
+
+// CSV upload and parsing
+document.getElementById('csv-file').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    Papa.parse(file, {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+            parsedData = results.data;
+            paginate(parsedData);
+        }
+    });
+});
+
+// Pagination logic
+function paginate(data) {
+    const tableBody = document.getElementById('table-body');
+    tableBody.innerHTML = '';
+
+    // Calculate the start and end indexes based on currentPage and rowsPerPage
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = currentPage * rowsPerPage;
+    const rowsToDisplay = data.slice(start, end);
+
+    // Display rows in table
+    rowsToDisplay.forEach(row => {
+        const tr = document.createElement('tr');
+        Object.values(row).forEach(value => {
+            const td = document.createElement('td');
+            td.textContent = value;
+            tr.appendChild(td);
+        });
+        tableBody.appendChild(tr);
+    });
+}
+
+// Next and Previous buttons
+document.getElementById('next-page').addEventListener('click', () => {
+    if (currentPage * rowsPerPage < parsedData.length) {
+        currentPage++;
+        paginate(parsedData);
+    }
+});
+
+document.getElementById('prev-page').addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage--;
+        paginate(parsedData);
+    }
+});
+
+ // Static Data (Used if no CSV file is uploaded or if there's no data in the CSV)
+ const staticModelYears = ['2020', '2021', '2022', '2023', '2024'];
+  const staticElectricRanges = [150, 200, 250, 300, 350];
+  const staticBaseMSRPs = [30000, 35000, 40000, 45000, 50000];
+  const staticMakes = ['Toyota', 'Ford', 'Honda', 'BMW', 'Chevrolet'];
+  const staticMakeCounts = [15, 20, 10, 5, 8]; // Static counts for each make
+
+  // Line Chart (Electric Range vs Model Year)
+  document.getElementById('csv-file').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) {
+      createChart(staticModelYears, staticElectricRanges); // Use static data if no file is uploaded
+      return;
+    }
+
+    Papa.parse(file, {
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      complete: function (results) {
+        const data = results.data;
+        const modelYears = data.map(row => row['Model Year']);
+        const electricRanges = data.map(row => row['Electric Range']);
+        
+        // If CSV data is empty, use static data
+        if (modelYears.length && electricRanges.length) {
+          createChart(modelYears, electricRanges);
+        } else {
+          createChart(staticModelYears, staticElectricRanges); // Fallback to static data
+        }
+      }
+    });
+  });
+
+  function createChart(modelYears, electricRanges) {
+    const ctx = document.getElementById('lineChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: modelYears,
+        datasets: [{
+          label: 'Electric Range',
+          data: electricRanges,
+          borderColor: '#16eb5a',
+          backgroundColor: 'rgba(22, 235, 90, 0.2)',
+          fill: true,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        aspectRatio: 1.5,
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.1)',
+            },
+            ticks: {
+              color: '#fff',
+            },
+            title: {
+              display: true,
+              text: 'Electric Range',
+              color: '#fff',
+              font: {
+                size: 16,
+              },
+            },
+          },
+          x: {
+            grid: {
+              color: 'rgba(0, 0, 0, 0.1)',
+            },
+            ticks: {
+              color: '#fff',
+            },
+            title: {
+              display: true,
+              text: 'Model Year',
+              color: '#fff',
+              font: {
+                size: 16,
+              },
+            },
+          },
+        },
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              color: '#fff',
+            },
+          },
+          tooltip: {
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            borderColor: '#fff',
+            borderWidth: 1,
+          },
+        },
+      },
+    });
+  }
+
+  // Bar Chart (Base MSRP vs Model Year)
+  document.getElementById('csv-file').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) {
+      createBarChart(staticModelYears, staticBaseMSRPs); // Use static data if no file is uploaded
+      return;
+    }
+
+    Papa.parse(file, {
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      complete: function (results) {
+        const data = results.data;
+        const modelYears = data.map(row => row['Model Year']);
+        const baseMSRPs = data.map(row => row['Base MSRP']);
+        
+        // If CSV data is empty, use static data
+        if (modelYears.length && baseMSRPs.length) {
+          createBarChart(modelYears, baseMSRPs);
+        } else {
+          createBarChart(staticModelYears, staticBaseMSRPs); // Fallback to static data
+        }
+      }
+    });
+  });
+
+  function createBarChart(modelYears, baseMSRPs) {
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: modelYears,
+        datasets: [{
+          label: 'Base MSRP',
+          data: baseMSRPs,
+          backgroundColor: '#16eb5a',
+          borderColor: '#000000',
+          borderWidth: 2,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        aspectRatio: 1.5,
+        scales: {
+          x: {
+            ticks: {
+              color: '#FFFFFF',
+              font: {
+                weight: 'bold',
+                size: 12,
+              },
+            },
+            grid: {
+              color: '#16eb5a',
+            },
+          },
+          y: {
+            ticks: {
+              color: '#FFFFFF',
+              font: {
+                weight: 'bold',
+                size: 12,
+              },
+            },
+            grid: {
+              color: '#16eb5a',
+            },
+          },
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: '#FFFFFF',
+              font: {
+                weight: 'bold',
+                size: 12,
+              },
+            },
+          },
+        },
+        layout: {
+          padding: {
+            top: 20,
+            left: 20,
+            right: 20,
+            bottom: 20,
+          },
+        },
+      },
+    });
+  }
+
+  // Pie Chart (Vehicle Makes Distribution)
+  document.getElementById('csv-file').addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) {
+      createPieChart(staticMakes, staticMakeCounts); // Use static data if no file is uploaded
+      return;
+    }
+
+    Papa.parse(file, {
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      complete: function (results) {
+        const data = results.data;
+        const makeCounts = countMakes(data);
+        const makes = Object.keys(makeCounts);
+        const counts = Object.values(makeCounts);
+        
+        // If CSV data is empty, use static data
+        if (makes.length && counts.length) {
+          createPieChart(makes, counts);
+        } else {
+          createPieChart(staticMakes, staticMakeCounts); // Fallback to static data
+        }
+      }
+    });
+  });
+
+  // Function to count occurrences of each make
+  function countMakes(data) {
+    const makeCounts = {};
+    data.forEach(row => {
+      const make = row['Make'];
+      makeCounts[make] = (makeCounts[make] || 0) + 1;
+    });
+    return makeCounts;
+  }
+
+  function createPieChart(makes, counts) {
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    new Chart(pieCtx, {
+      type: 'pie',
+      data: {
+        labels: makes,
+        datasets: [{
+          data: counts,
+          backgroundColor: ['#16eb5a', '#FFF', '#000', '#3498db', '#f39c12', '#e74c3c'],
+          borderWidth: 2,
+          borderColor: '#FFF',
+        }],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+              color: '#FFF',
+              font: {
+                size: 12,
+                weight: 'bold',
+              },
+            },
+          },
+          tooltip: {
+            backgroundColor: '#16eb5a',
+            titleColor: '#FFF',
+            bodyColor: '#FFF',
+            borderColor: '#FFF',
+            borderWidth: 1,
+            callbacks: {
+              label: function (tooltipItem) {
+                return `${tooltipItem.label}: ${tooltipItem.raw} vehicles`; // Tooltip format
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+/* dyname working
+//linechart
+document.getElementById('csv-file').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    Papa.parse(file, {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+            const data = results.data;
+            const modelYears = data.map(row => row['Model Year']);
+            const electricRanges = data.map(row => row['Electric Range']); // Electric Range for Y-axis
+            createChart(modelYears, electricRanges);
+        }
+    });
+});
+
+function createChart(modelYears, electricRanges) {
+    const ctx = document.getElementById('lineChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: modelYears, // Model Year as X-axis
+            datasets: [{
+                label: 'Electric Range',
+                data: electricRanges, // Electric Range as Y-axis
+                borderColor: '#16eb5a',
+                backgroundColor: 'rgba(22, 235, 90, 0.2)',
+                fill: true,
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 1.5,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)',
+                    },
+                    ticks: {
+                        color: '#fff',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Electric Range',
+                        color: '#fff',
+                        font: {
+                            size: 16,
+                        },
+                    },
+                },
+                x: {
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.1)',
+                    },
+                    ticks: {
+                        color: '#fff',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Model Year',
+                        color: '#fff',
+                        font: {
+                            size: 16,
+                        },
+                    },
+                },
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: '#fff',
+                    },
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: '#fff',
+                    borderWidth: 1,
+                },
+            },
+        },
+    });
+}
+
+//barchart
+document.getElementById('csv-file').addEventListener('change', function(e) {
+const file = e.target.files[0];
+if (!file) return;
+
+    Papa.parse(file, {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+            const data = results.data;
+            const modelYears = data.map(row => row['Model Year']);
+            const baseMSRPs = data.map(row => row['Base MSRP']); // Base MSRP for Y-axis
+            createBarChart(modelYears, baseMSRPs);
+        }
+    });
+});
+
+function createBarChart(modelYears, baseMSRPs) {
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: modelYears, // Model Year as X-axis
+            datasets: [{
+                label: 'Base MSRP',
+                data: baseMSRPs, // Base MSRP as Y-axis
+                backgroundColor: '#16eb5a', // Primary color for bars
+                borderColor: '#000000', // Black borders for contrast
+                borderWidth: 2,
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 1.5, // Adjust for smaller screens
+            scales: {
+                x: {
+                    ticks: {
+                        color: '#FFFFFF', // White text for X-axis labels
+                        font: {
+                            weight: 'bold', // Bold text for X-axis
+                            size: 12, // Adjust font size for small screens
+                        },
+                    },
+                    grid: {
+                        color: '#16eb5a', // Green grid lines for X-axis
+                    },
+                },
+                y: {
+                    ticks: {
+                        color: '#FFFFFF', // White text for Y-axis labels
+                        font: {
+                            weight: 'bold', // Bold text for Y-axis
+                            size: 12, // Adjust font size for small screens
+                        },
+                    },
+                    grid: {
+                        color: '#16eb5a', // Green grid lines for Y-axis
+                    },
+                },
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#FFFFFF', // White text for legend
+                        font: {
+                            weight: 'bold', // Bold text for legend
+                            size: 12, // Adjust font size for small screens
+                        },
+                    },
+                },
+            },
+            layout: {
+                padding: {
+                    top: 20,
+                    left: 20,
+                    right: 20,
+                    bottom: 20,
+                },
+            },
+        },
+    });
+}
+
+//piechart
+document.getElementById('csv-file').addEventListener('change', function(e) {
+const file = e.target.files[0];
+if (!file) return;
+
+    Papa.parse(file, {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+            const data = results.data;
+            const makeCounts = countMakes(data); // Get the count of each make
+            const makes = Object.keys(makeCounts); // Get makes as labels
+            const counts = Object.values(makeCounts); // Get their corresponding counts
+            createPieChart(makes, counts);
+        }
+    });
+});
+
+// Function to count occurrences of each make
+function countMakes(data) {
+    const makeCounts = {};
+    data.forEach(row => {
+        const make = row['Make'];
+        makeCounts[make] = (makeCounts[make] || 0) + 1;
+    });
+    return makeCounts;
+}
+
+function createPieChart(makes, counts) {
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: makes, // Vehicle makes as categories
+            datasets: [{
+                data: counts, // Counts of each make
+                backgroundColor: ['#16eb5a', '#FFF', '#000', '#3498db', '#f39c12', '#e74c3c'], // Add more colors if needed
+                borderWidth: 2, // Border around each slice
+                borderColor: '#FFF', // White border for better contrast
+            }],
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    labels: {
+                        color: '#FFF', // White text for labels
+                        font: {
+                            size: 12,
+                            weight: 'bold',
+                        },
+                    },
+                },
+                tooltip: {
+                    backgroundColor: '#16eb5a', // Green tooltip background
+                    titleColor: '#FFF', // White text in tooltips
+                    bodyColor: '#FFF',
+                    borderColor: '#FFF',
+                    borderWidth: 1,
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            const value = tooltipItem.raw;
+                            return `${tooltipItem.label}: ${value} vehicles`; // Tooltip format
+                        },
+                    },
+                },
+            },
+        },
+    });
+}
+*/
+</script>
+

@@ -199,11 +199,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="container mt-4">
-                    <label for="csv-file" class="custom-file-label">Choose a CSV File</label>
-                    <input type="file" id="csv-file" accept=".csv" class="input-csv">
-                </div>
     
                 <div class="container pt-4 mt-4" id="lineChartContainer">
                     <div class="row text-center">
@@ -508,7 +503,7 @@
         });
     }
 
-    // Next and Previous buttons for pagination
+    // Next and Previous btns for pagination
     document.getElementById('next-page').addEventListener('click', () => {
         if (currentPage * rowsPerPage < parsedData.length) {
             currentPage++;
@@ -535,7 +530,7 @@
             }
         });
 
-        // Sort data by Model Year for better visualization
+        // Sort data by Model Year 
         const sortedData = modelYears
             .map((year, index) => ({ year, range: electricRanges[index] }))
             .sort((a, b) => a.year - b.year);
@@ -554,7 +549,7 @@
                     borderColor: '#16eb5a',
                     backgroundColor: 'rgba(22, 235, 90, 0.2)',
                     fill: true,
-                    tension: 0.4, // Smooth curve
+                    tension: 0.4, // curve
                     pointRadius: 3,
                     pointBackgroundColor: '#16eb5a',
                 }],
@@ -562,7 +557,7 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                aspectRatio: window.innerWidth < 768 ? 1 : 1.5, // Square-like aspect ratio for mobile
+                aspectRatio: window.innerWidth < 768 ? 1 : 1.5, // Square for mobile
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -577,7 +572,7 @@
                             text: 'Electric Range',
                             color: '#fff',
                             font: {
-                                size: window.innerWidth < 768 ? 14 : 16, // Smaller font on mobile
+                                size: window.innerWidth < 768 ? 14 : 16, // Smaller font mobile
                             },
                         },
                     },
@@ -593,7 +588,7 @@
                             text: 'Model Year',
                             color: '#fff',
                             font: {
-                                size: window.innerWidth < 768 ? 14 : 16, // Smaller font on mobile
+                                size: window.innerWidth < 768 ? 14 : 16, // Smaller font mobile
                             },
                         },
                     },
@@ -604,7 +599,7 @@
                         labels: {
                             color: '#fff',
                             font: {
-                                size: window.innerWidth < 768 ? 12 : 14, // Smaller font on mobile
+                                size: window.innerWidth < 768 ? 12 : 14, // Smaller font mobile
                             },
                         },
                     },
@@ -638,7 +633,7 @@
             }
         });
 
-        // Sort data by Model Year for better visualization
+        // Sort data by Model Year
         const sortedData = modelYears
             .map((year, index) => ({ year, msrp: baseMSRPs[index] }))
             .sort((a, b) => a.year - b.year);
@@ -662,7 +657,7 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                aspectRatio: window.innerWidth < 768 ? 1 : 1.5, // Larger height-to-width ratio for mobile
+                aspectRatio: window.innerWidth < 768 ? 1 : 1.5, // Larger heightwidth ratio for mobile
                 scales: {
                     x: {
                         ticks: {
@@ -762,7 +757,7 @@
                         borderWidth: 1,
                         callbacks: {
                             label: function (tooltipItem) {
-                                return `${tooltipItem.label}: ${tooltipItem.raw} vehicles`; // Tooltip format
+                                return `${tooltipItem.label}: ${tooltipItem.raw} vehicles`; 
                             },
                         },
                     },

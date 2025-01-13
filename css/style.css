@@ -440,12 +440,28 @@ body{
 }
 
 /* line-Canvas styling */
-.line-canvas {
+/* .line-canvas {
     max-width: 100%;
     background-color:  #0f1c0f  !important;
     padding: 20px;
     box-shadow: var(--primary);
     margin-top: 20px; 
+} */
+.line-canvas {
+    width: 100%; /* Ensure canvas scales */
+    height: auto; /* Maintain aspect ratio */
+    background-color: #0f1c0f !important;
+    padding: 20px;
+    box-shadow: var(--primary);
+    margin-top: 20px;
+    display: block; 
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+    .line-canvas {
+        padding: 10px; /* Reduce padding to use more space for the chart */
+    }
 }
 
 
@@ -549,7 +565,7 @@ h3 {
     color: var(--primary);
 }
 
-.bar-can {
+/* .bar-can {
     display: block;
     max-width: 100%;
     height: auto; 
@@ -558,6 +574,27 @@ h3 {
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     margin-top: 20px;
+} */
+
+.bar-can {
+    display: block;
+    max-width: 100%; /* Ensure canvas scales */
+    height: auto; /* Maintain aspect ratio */
+    background-color: #0f1c0f !important;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin-top: 20px;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+    .bar-chart-container {
+        max-width: 90%; /* Use mobile */
+    }
+    .bar-can {
+        padding: 10px; /* Reduce for more space */
+    }
 }
 
 

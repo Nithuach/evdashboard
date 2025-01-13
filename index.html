@@ -454,604 +454,321 @@
 <script src="js/main.js"></script>
 
 <script>
-let currentPage = 1;
-const rowsPerPage = 100;
-let parsedData = [];
+    let currentPage = 1;
+    const rowsPerPage = 100;
+    let parsedData = [];
 
-// CSV upload and parsing
-document.getElementById('csv-file').addEventListener('change', function(e) {
-    const file = e.target.files[0];
+    // Fetch and parse the CSV file once
+    async function fetchCSV() {
+        try {
+            const response = await fetch('Electric_Vehicle_Population_Data.csv');
+            if (!response.ok) throw new Error('Failed to fetch the CSV file.');
+            const csvText = await response.text();
+            parseCSV(csvText);
+        } catch (error) {
+            console.error('Error fetching CSV:', error);
+        }
+    }
 
-    if (!file) return;
+    // Parse the CSV content using PapaParse
+    function parseCSV(csvText) {
+        Papa.parse(csvText, {
+            header: true,
+            dynamicTyping: true,
+            skipEmptyLines: true,
+            complete: function (results) {
+                parsedData = results.data;
+                paginate(parsedData);
+                createLineChart(parsedData); // Create the line chart
+                createBarChart(parsedData); // Create the bar chart
+                createPieChart(parsedData); // Create the pie chart
+            }
+        });
+    }
 
-    Papa.parse(file, {
-        header: true,
-        dynamicTyping: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-            parsedData = results.data;
+    // Pagination logic
+    function paginate(data) {
+        const tableBody = document.getElementById('table-body');
+        tableBody.innerHTML = '';
+
+        // Calculate the start and end indexes based on currentPage and rowsPerPage
+        const start = (currentPage - 1) * rowsPerPage;
+        const end = currentPage * rowsPerPage;
+        const rowsToDisplay = data.slice(start, end);
+
+        // Display rows in the table
+        rowsToDisplay.forEach(row => {
+            const tr = document.createElement('tr');
+            Object.values(row).forEach(value => {
+                const td = document.createElement('td');
+                td.textContent = value;
+                tr.appendChild(td);
+            });
+            tableBody.appendChild(tr);
+        });
+    }
+
+    // Next and Previous buttons for pagination
+    document.getElementById('next-page').addEventListener('click', () => {
+        if (currentPage * rowsPerPage < parsedData.length) {
+            currentPage++;
             paginate(parsedData);
         }
     });
-});
 
-// Pagination logic
-function paginate(data) {
-    const tableBody = document.getElementById('table-body');
-    tableBody.innerHTML = '';
+    document.getElementById('prev-page').addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            paginate(parsedData);
+        }
+    });
 
-    // Calculate the start and end indexes based on currentPage and rowsPerPage
-    const start = (currentPage - 1) * rowsPerPage;
-    const end = currentPage * rowsPerPage;
-    const rowsToDisplay = data.slice(start, end);
+    // Create the line chart
+    function createLineChart(data) {
+        const modelYears = [];
+        const electricRanges = [];
 
-    // Display rows in table
-    rowsToDisplay.forEach(row => {
-        const tr = document.createElement('tr');
-        Object.values(row).forEach(value => {
-            const td = document.createElement('td');
-            td.textContent = value;
-            tr.appendChild(td);
+        data.forEach(row => {
+            if (row['Model Year'] && row['Electric Range']) {
+                modelYears.push(row['Model Year']);
+                electricRanges.push(row['Electric Range']);
+            }
         });
-        tableBody.appendChild(tr);
-    });
-}
 
-// Next and Previous buttons
-document.getElementById('next-page').addEventListener('click', () => {
-    if (currentPage * rowsPerPage < parsedData.length) {
-        currentPage++;
-        paginate(parsedData);
-    }
-});
+        // Sort data by Model Year for better visualization
+        const sortedData = modelYears
+            .map((year, index) => ({ year, range: electricRanges[index] }))
+            .sort((a, b) => a.year - b.year);
 
-document.getElementById('prev-page').addEventListener('click', () => {
-    if (currentPage > 1) {
-        currentPage--;
-        paginate(parsedData);
-    }
-});
+        const sortedModelYears = sortedData.map(item => item.year);
+        const sortedElectricRanges = sortedData.map(item => item.range);
 
- // Static Data (Used if no CSV file is uploaded or if there's no data in the CSV)
- const staticModelYears = ['2020', '2021', '2022', '2023', '2024'];
-  const staticElectricRanges = [150, 200, 250, 300, 350];
-  const staticBaseMSRPs = [30000, 35000, 40000, 45000, 50000];
-  const staticMakes = ['Toyota', 'Ford', 'Honda', 'BMW', 'Chevrolet'];
-  const staticMakeCounts = [15, 20, 10, 5, 8]; // Static counts for each make
-
-  // Line Chart (Electric Range vs Model Year)
-  document.getElementById('csv-file').addEventListener('change', function (e) {
-    const file = e.target.files[0];
-    if (!file) {
-      createChart(staticModelYears, staticElectricRanges); // Use static data if no file is uploaded
-      return;
-    }
-
-    Papa.parse(file, {
-      header: true,
-      dynamicTyping: true,
-      skipEmptyLines: true,
-      complete: function (results) {
-        const data = results.data;
-        const modelYears = data.map(row => row['Model Year']);
-        const electricRanges = data.map(row => row['Electric Range']);
-        
-        // If CSV data is empty, use static data
-        if (modelYears.length && electricRanges.length) {
-          createChart(modelYears, electricRanges);
-        } else {
-          createChart(staticModelYears, staticElectricRanges); // Fallback to static data
-        }
-      }
-    });
-  });
-
-  function createChart(modelYears, electricRanges) {
-  const ctx = document.getElementById('lineChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-        labels: modelYears,
-        datasets: [{
-            label: 'Electric Range',
-            data: electricRanges,
-            borderColor: '#16eb5a',
-            backgroundColor: 'rgba(22, 235, 90, 0.2)',
-            fill: true,
-        }],
-        },
-        options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        aspectRatio: window.innerWidth < 768 ? 1 : 1.5, // Square-like aspect ratio for mobile
-        scales: {
-            y: {
-            beginAtZero: true,
-            grid: {
-                color: 'rgba(0, 0, 0, 0.1)',
+        const ctx = document.getElementById('lineChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: sortedModelYears,
+                datasets: [{
+                    label: 'Electric Range',
+                    data: sortedElectricRanges,
+                    borderColor: '#16eb5a',
+                    backgroundColor: 'rgba(22, 235, 90, 0.2)',
+                    fill: true,
+                    tension: 0.4, // Smooth curve
+                    pointRadius: 3,
+                    pointBackgroundColor: '#16eb5a',
+                }],
             },
-            ticks: {
-                color: '#fff',
-            },
-            title: {
-                display: true,
-                text: 'Electric Range',
-                color: '#fff',
-                font: {
-                size: window.innerWidth < 768 ? 14 : 16, // Smaller font on mobile
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: window.innerWidth < 768 ? 1 : 1.5, // Square-like aspect ratio for mobile
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)',
+                        },
+                        ticks: {
+                            color: '#fff',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Electric Range',
+                            color: '#fff',
+                            font: {
+                                size: window.innerWidth < 768 ? 14 : 16, // Smaller font on mobile
+                            },
+                        },
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)',
+                        },
+                        ticks: {
+                            color: '#fff',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Model Year',
+                            color: '#fff',
+                            font: {
+                                size: window.innerWidth < 768 ? 14 : 16, // Smaller font on mobile
+                            },
+                        },
+                    },
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: '#fff',
+                            font: {
+                                size: window.innerWidth < 768 ? 12 : 14, // Smaller font on mobile
+                            },
+                        },
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: '#fff',
+                        borderWidth: 1,
+                        titleFont: {
+                            size: window.innerWidth < 768 ? 12 : 14,
+                        },
+                        bodyFont: {
+                            size: window.innerWidth < 768 ? 12 : 14,
+                        },
+                    },
                 },
             },
-            },
-            x: {
-            grid: {
-                color: 'rgba(0, 0, 0, 0.1)',
-            },
-            ticks: {
-                color: '#fff',
-            },
-            title: {
-                display: true,
-                text: 'Model Year',
-                color: '#fff',
-                font: {
-                size: window.innerWidth < 768 ? 14 : 16, // Smaller font on mobile
-                },
-            },
-            },
-        },
-        plugins: {
-            legend: {
-            position: 'top',
-            labels: {
-                color: '#fff',
-                font: {
-                size: window.innerWidth < 768 ? 12 : 14, // Smaller font on mobile
-                },
-            },
-            },
-            tooltip: {
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            titleColor: '#fff',
-            bodyColor: '#fff',
-            borderColor: '#fff',
-            borderWidth: 1,
-            titleFont: {
-                size: window.innerWidth < 768 ? 12 : 14,
-            },
-            bodyFont: {
-                size: window.innerWidth < 768 ? 12 : 14,
-            },
-            },
-        },
-        },
-    });
+        });
     }
 
-  // Bar Chart (Base MSRP vs Model Year)
-  document.getElementById('csv-file').addEventListener('change', function (e) {
-    const file = e.target.files[0];
-    if (!file) {
-      createBarChart(staticModelYears, staticBaseMSRPs); // Use static data if no file is uploaded
-      return;
-    }
+    // Create the bar chart
+    function createBarChart(data) {
+        const modelYears = [];
+        const baseMSRPs = [];
 
-    Papa.parse(file, {
-      header: true,
-      dynamicTyping: true,
-      skipEmptyLines: true,
-      complete: function (results) {
-        const data = results.data;
-        const modelYears = data.map(row => row['Model Year']);
-        const baseMSRPs = data.map(row => row['Base MSRP']);
-        
-        // If CSV data is empty, use static data
-        if (modelYears.length && baseMSRPs.length) {
-          createBarChart(modelYears, baseMSRPs);
-        } else {
-          createBarChart(staticModelYears, staticBaseMSRPs); // Fallback to static data
-        }
-      }
-    });
-  });
+        data.forEach(row => {
+            if (row['Model Year'] && row['Base MSRP']) {
+                modelYears.push(row['Model Year']);
+                baseMSRPs.push(row['Base MSRP']);
+            }
+        });
 
-  function createBarChart(modelYears, baseMSRPs) {
-  const barCtx = document.getElementById('barChart').getContext('2d');
-    new Chart(barCtx, {
-        type: 'bar',
-        data: {
-        labels: modelYears,
-        datasets: [{
-            label: 'Base MSRP',
-            data: baseMSRPs,
-            backgroundColor: '#16eb5a',
-            borderColor: '#000000',
-            borderWidth: 2,
-        }],
-        },
-        options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        aspectRatio: window.innerWidth < 768 ? 1 : 1.5, // Larger height-to-width ratio for mobile
-        scales: {
-            x: {
-            ticks: {
-                color: '#FFFFFF',
-                font: {
-                weight: 'bold',
-                size: window.innerWidth < 768 ? 10 : 12, // Smaller font size for mobile
+        // Sort data by Model Year for better visualization
+        const sortedData = modelYears
+            .map((year, index) => ({ year, msrp: baseMSRPs[index] }))
+            .sort((a, b) => a.year - b.year);
+
+        const sortedModelYears = sortedData.map(item => item.year);
+        const sortedBaseMSRPs = sortedData.map(item => item.msrp);
+
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: sortedModelYears,
+                datasets: [{
+                    label: 'Base MSRP',
+                    data: sortedBaseMSRPs,
+                    backgroundColor: '#16eb5a',
+                    borderColor: '#000000',
+                    borderWidth: 2,
+                }],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: window.innerWidth < 768 ? 1 : 1.5, // Larger height-to-width ratio for mobile
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#FFFFFF',
+                            font: {
+                                weight: 'bold',
+                                size: window.innerWidth < 768 ? 10 : 12, // Smaller font size for mobile
+                            },
+                        },
+                        grid: {
+                            color: '#16eb5a',
+                        },
+                    },
+                    y: {
+                        ticks: {
+                            color: '#FFFFFF',
+                            font: {
+                                weight: 'bold',
+                                size: window.innerWidth < 768 ? 10 : 12, // Smaller font size for mobile
+                            },
+                        },
+                        grid: {
+                            color: '#16eb5a',
+                        },
+                    },
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#FFFFFF',
+                            font: {
+                                weight: 'bold',
+                                size: window.innerWidth < 768 ? 10 : 12, // Smaller font size for mobile
+                            },
+                        },
+                    },
+                },
+                layout: {
+                    padding: {
+                        top: window.innerWidth < 768 ? 10 : 20, // Smaller padding on mobile
+                        left: 10,
+                        right: 10,
+                        bottom: window.innerWidth < 768 ? 10 : 20,
+                    },
                 },
             },
-            grid: {
-                color: '#16eb5a',
-            },
-            },
-            y: {
-            ticks: {
-                color: '#FFFFFF',
-                font: {
-                weight: 'bold',
-                size: window.innerWidth < 768 ? 10 : 12, // Smaller font size for mobile
-                },
-            },
-            grid: {
-                color: '#16eb5a',
-            },
-            },
-        },
-        plugins: {
-            legend: {
-            labels: {
-                color: '#FFFFFF',
-                font: {
-                weight: 'bold',
-                size: window.innerWidth < 768 ? 10 : 12, // Smaller font size for mobile
-                },
-            },
-            },
-        },
-        layout: {
-            padding: {
-            top: window.innerWidth < 768 ? 10 : 20, // Smaller padding on mobile
-            left: 10,
-            right: 10,
-            bottom: window.innerWidth < 768 ? 10 : 20,
-            },
-        },
-        },
-    });
+        });
     }
 
-  // Pie Chart (Vehicle Makes Distribution)
-  document.getElementById('csv-file').addEventListener('change', function (e) {
-    const file = e.target.files[0];
-    if (!file) {
-      createPieChart(staticMakes, staticMakeCounts); // Use static data if no file is uploaded
-      return;
+    // Count the number of occurrences of each make
+    function countMakes(data) {
+        const makeCounts = {};
+        data.forEach(row => {
+            const make = row['Make'];
+            makeCounts[make] = (makeCounts[make] || 0) + 1;
+        });
+        return makeCounts;
     }
 
-    Papa.parse(file, {
-      header: true,
-      dynamicTyping: true,
-      skipEmptyLines: true,
-      complete: function (results) {
-        const data = results.data;
+    // Create the pie chart
+    function createPieChart(data) {
         const makeCounts = countMakes(data);
         const makes = Object.keys(makeCounts);
         const counts = Object.values(makeCounts);
-        
-        // If CSV data is empty, use static data
-        if (makes.length && counts.length) {
-          createPieChart(makes, counts);
-        } else {
-          createPieChart(staticMakes, staticMakeCounts); // Fallback to static data
-        }
-      }
-    });
-  });
 
-  // Function to count occurrences of each make
-  function countMakes(data) {
-    const makeCounts = {};
-    data.forEach(row => {
-      const make = row['Make'];
-      makeCounts[make] = (makeCounts[make] || 0) + 1;
-    });
-    return makeCounts;
-  }
-
-  function createPieChart(makes, counts) {
-    const pieCtx = document.getElementById('pieChart').getContext('2d');
-    new Chart(pieCtx, {
-      type: 'pie',
-      data: {
-        labels: makes,
-        datasets: [{
-          data: counts,
-          backgroundColor: ['#16eb5a', '#FFF', '#000', '#3498db', '#f39c12', '#e74c3c'],
-          borderWidth: 2,
-          borderColor: '#FFF',
-        }],
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true,
-            position: 'bottom',
-            labels: {
-              color: '#FFF',
-              font: {
-                size: 12,
-                weight: 'bold',
-              },
-            },
-          },
-          tooltip: {
-            backgroundColor: '#16eb5a',
-            titleColor: '#FFF',
-            bodyColor: '#FFF',
-            borderColor: '#FFF',
-            borderWidth: 1,
-            callbacks: {
-              label: function (tooltipItem) {
-                return `${tooltipItem.label}: ${tooltipItem.raw} vehicles`; // Tooltip format
-              },
-            },
-          },
-        },
-      },
-    });
-  }
-
-/* dyname working
-//linechart
-document.getElementById('csv-file').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    Papa.parse(file, {
-        header: true,
-        dynamicTyping: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-            const data = results.data;
-            const modelYears = data.map(row => row['Model Year']);
-            const electricRanges = data.map(row => row['Electric Range']); // Electric Range for Y-axis
-            createChart(modelYears, electricRanges);
-        }
-    });
-});
-
-function createChart(modelYears, electricRanges) {
-    const ctx = document.getElementById('lineChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: modelYears, // Model Year as X-axis
-            datasets: [{
-                label: 'Electric Range',
-                data: electricRanges, // Electric Range as Y-axis
-                borderColor: '#16eb5a',
-                backgroundColor: 'rgba(22, 235, 90, 0.2)',
-                fill: true,
-            }],
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            aspectRatio: 1.5,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.1)',
-                    },
-                    ticks: {
-                        color: '#fff',
-                    },
-                    title: {
-                        display: true,
-                        text: 'Electric Range',
-                        color: '#fff',
-                        font: {
-                            size: 16,
-                        },
-                    },
-                },
-                x: {
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.1)',
-                    },
-                    ticks: {
-                        color: '#fff',
-                    },
-                    title: {
-                        display: true,
-                        text: 'Model Year',
-                        color: '#fff',
-                        font: {
-                            size: 16,
-                        },
-                    },
-                },
-            },
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        color: '#fff',
-                    },
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                    titleColor: '#fff',
-                    bodyColor: '#fff',
-                    borderColor: '#fff',
-                    borderWidth: 1,
-                },
-            },
-        },
-    });
-}
-
-//barchart
-document.getElementById('csv-file').addEventListener('change', function(e) {
-const file = e.target.files[0];
-if (!file) return;
-
-    Papa.parse(file, {
-        header: true,
-        dynamicTyping: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-            const data = results.data;
-            const modelYears = data.map(row => row['Model Year']);
-            const baseMSRPs = data.map(row => row['Base MSRP']); // Base MSRP for Y-axis
-            createBarChart(modelYears, baseMSRPs);
-        }
-    });
-});
-
-function createBarChart(modelYears, baseMSRPs) {
-    const barCtx = document.getElementById('barChart').getContext('2d');
-    new Chart(barCtx, {
-        type: 'bar',
-        data: {
-            labels: modelYears, // Model Year as X-axis
-            datasets: [{
-                label: 'Base MSRP',
-                data: baseMSRPs, // Base MSRP as Y-axis
-                backgroundColor: '#16eb5a', // Primary color for bars
-                borderColor: '#000000', // Black borders for contrast
-                borderWidth: 2,
-            }],
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            aspectRatio: 1.5, // Adjust for smaller screens
-            scales: {
-                x: {
-                    ticks: {
-                        color: '#FFFFFF', // White text for X-axis labels
-                        font: {
-                            weight: 'bold', // Bold text for X-axis
-                            size: 12, // Adjust font size for small screens
-                        },
-                    },
-                    grid: {
-                        color: '#16eb5a', // Green grid lines for X-axis
-                    },
-                },
-                y: {
-                    ticks: {
-                        color: '#FFFFFF', // White text for Y-axis labels
-                        font: {
-                            weight: 'bold', // Bold text for Y-axis
-                            size: 12, // Adjust font size for small screens
-                        },
-                    },
-                    grid: {
-                        color: '#16eb5a', // Green grid lines for Y-axis
-                    },
-                },
-            },
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#FFFFFF', // White text for legend
-                        font: {
-                            weight: 'bold', // Bold text for legend
-                            size: 12, // Adjust font size for small screens
-                        },
-                    },
-                },
-            },
-            layout: {
-                padding: {
-                    top: 20,
-                    left: 20,
-                    right: 20,
-                    bottom: 20,
-                },
-            },
-        },
-    });
-}
-
-//piechart
-document.getElementById('csv-file').addEventListener('change', function(e) {
-const file = e.target.files[0];
-if (!file) return;
-
-    Papa.parse(file, {
-        header: true,
-        dynamicTyping: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-            const data = results.data;
-            const makeCounts = countMakes(data); // Get the count of each make
-            const makes = Object.keys(makeCounts); // Get makes as labels
-            const counts = Object.values(makeCounts); // Get their corresponding counts
-            createPieChart(makes, counts);
-        }
-    });
-});
-
-// Function to count occurrences of each make
-function countMakes(data) {
-    const makeCounts = {};
-    data.forEach(row => {
-        const make = row['Make'];
-        makeCounts[make] = (makeCounts[make] || 0) + 1;
-    });
-    return makeCounts;
-}
-
-function createPieChart(makes, counts) {
-    const pieCtx = document.getElementById('pieChart').getContext('2d');
-    new Chart(pieCtx, {
-        type: 'pie',
-        data: {
-            labels: makes, // Vehicle makes as categories
-            datasets: [{
-                data: counts, // Counts of each make
-                backgroundColor: ['#16eb5a', '#FFF', '#000', '#3498db', '#f39c12', '#e74c3c'], // Add more colors if needed
-                borderWidth: 2, // Border around each slice
-                borderColor: '#FFF', // White border for better contrast
-            }],
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: true,
-                    position: 'bottom',
-                    labels: {
-                        color: '#FFF', // White text for labels
-                        font: {
-                            size: 12,
-                            weight: 'bold',
-                        },
-                    },
-                },
-                tooltip: {
-                    backgroundColor: '#16eb5a', // Green tooltip background
-                    titleColor: '#FFF', // White text in tooltips
-                    bodyColor: '#FFF',
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: makes,
+                datasets: [{
+                    data: counts,
+                    backgroundColor: ['#16eb5a', '#FFF', '#000', '#3498db', '#f39c12', '#e74c3c'],
+                    borderWidth: 2,
                     borderColor: '#FFF',
-                    borderWidth: 1,
-                    callbacks: {
-                        label: function (tooltipItem) {
-                            const value = tooltipItem.raw;
-                            return `${tooltipItem.label}: ${value} vehicles`; // Tooltip format
+                }],
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            color: '#FFF',
+                            font: {
+                                size: 12,
+                                weight: 'bold',
+                            },
+                        },
+                    },
+                    tooltip: {
+                        backgroundColor: '#16eb5a',
+                        titleColor: '#FFF',
+                        bodyColor: '#FFF',
+                        borderColor: '#FFF',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return `${tooltipItem.label}: ${tooltipItem.raw} vehicles`; // Tooltip format
+                            },
                         },
                     },
                 },
             },
-        },
-    });
-}
-*/
+        });
+    }
+    fetchCSV();
 </script>
-

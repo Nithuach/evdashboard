@@ -29,7 +29,7 @@ body{
     width: 40px;
 }
 
-/*** Button ***/
+/* Button */
 .btn {
     transition: .5s;
 }
@@ -60,7 +60,7 @@ body{
     border-radius: 50px;
 }
 
-/*** Layout ***/
+/* Layout */
 .sidebar {
     position: fixed;
     top: 0;
@@ -121,7 +121,7 @@ body{
 }
 
 
-/*** Navbar ***/
+/* Navbar */
 .sidebar .navbar .navbar-nav .nav-link {
     padding: 7px 20px;
     color: var(--light);
@@ -364,60 +364,10 @@ body{
     font-size: 1.2rem;
 }
 
-.custom-file-label {
-    display: inline-block;
-    background-color: var(--primary);
-    color: var(--light);
-    font-size: 16px;
-    font-weight: bold;
-    padding: 12px 30px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    max-width: 100%;
-    width: auto;
-}
-
-.custom-file-label:hover {
-    background-color: var(--dark);
-    color: var(--light);
-}
-
-.input-csv {
-    display: none; /* Hide the default file input */
-}
-
-.container input[type="file"] {
-    display: none;
-}
-
-.container input[type="file"]:focus + .custom-file-label {
-    outline: 2px solid var(--primary);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .custom-file-label {
-        font-size: 14px; /* Smaller font size for mobile */
-        padding: 10px 20px; /* Adjust padding for smaller screens */
-    }
-}
-
-@media (max-width: 480px) {
-    .custom-file-label {
-        font-size: 12px; /* Even smaller font size on very small screens */
-        padding: 8px 15px; /* Adjust padding further for tiny screens */
-    }
-
-    .container {
-        padding: 20px; /* Add more padding for mobile */
-    }
-}
-
 /* Charts */
 .chart-item {
     display: flex;
-    flex-direction: column; /* Ensures elements are stacked vertically */
+    flex-direction: column; /* for vertically */
     justify-content: flex-start; 
     align-items: center;
     height: 100%;
@@ -464,30 +414,28 @@ body{
     }
 }
 
-
-
-/* Styling for headings */
+/* headings */
 h3 {
     color: var(--primary);
     font-size: 1.5rem;
     margin-bottom: 10px; 
 }
 
-/* Styling for paragraph descriptions */
+/* descriptions */
 .chart-description {
     font-size: 0.9rem; 
     color: var(--light);
     margin-bottom: 20px; 
 }
 
-/* Styling for the info paragraph */
+/* Styl paragraph */
 .info {
     font-size: 0.9rem;
     color: var(--light);
     background-color: rgba(255, 255, 255, 0.1);
     padding: 15px;
     margin-top: 10px;
-    border-radius: 5px; /* Rounded corners */
+    border-radius: 5px; /* Round corners */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -495,7 +443,7 @@ h3 {
     margin-right: 10px; /* Space between icon and text */
 }
 
-/* Additional info section */
+/* Addit section */
 .additional-info {
     margin-top: 20px;
     display: flex;
@@ -519,7 +467,7 @@ h3 {
     color: var(--light);
 }
 
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 768px) {
     .row {
         flex-direction: column;
@@ -548,7 +496,7 @@ h3 {
     }
 }
 
-/* Styling for the Bar Chart Heading */
+/* for Bar Chart Heading */
 .bar-heading {
     margin-top: 40px;
     text-align: center;
@@ -587,7 +535,7 @@ h3 {
     margin-top: 20px;
 }
 
-/* Mobile-specific styles */
+/* Mobile styles */
 @media (max-width: 768px) {
     .bar-chart-container {
         max-width: 90%; /* Use mobile */
@@ -598,7 +546,7 @@ h3 {
 }
 
 
-/* Responsive Design for Mobile Screens */
+/* Responsive for Mobile */
 @media (max-width: 768px) {
     .row {
         flex-direction: column; /* items vertically */
@@ -606,16 +554,16 @@ h3 {
     }
 
     .col-md-6 {
-        width: 100%; /* Full width for mobile screens */
-        padding: 10px; /* Add some spacing around columns */
+        width: 100%; /* Full width for mobile  */
+        padding: 10px; /* space around columns */
     }
 
     .chart-item {
-        margin-bottom: 20px; /* Add space between stacked items */
+        margin-bottom: 20px; /* space between stacked items */
     }
 
     .bar-heading h3 {
-        font-size: 1.3rem; /* Slightly smaller heading for mobile */
+        font-size: 1.3rem; /* smaller heading for mobile */
     }
 
     .bar-can {
@@ -625,7 +573,7 @@ h3 {
 
     .chart-description,
     .info {
-        font-size: 0.9rem; /* Adjust text size for readability */
+        font-size: 0.9rem;
     }
 
     .additional-info {
@@ -645,9 +593,9 @@ h3 {
 }
 
 
-/* Styling for the Table Heading */
+/* Table Heading */
 .table-heading {
-    margin-top: 40px;  /* Adds space between sections */
+    margin-top: 40px;  /* space between sections */
     text-align: center;  
 }
 
@@ -658,33 +606,33 @@ h3 {
 }
 
 .table-heading i {
-    margin-left: 10px;  /* Adds space between text and icon */
+    margin-left: 10px;  /* space between text and icon */
     color: var(--primary); 
 }
 
-/* Styling for the paragraph under the table heading */
+/* Styling paragraph under the table heading */
 .tbl-p {
     font-size: 1rem;  
     color: var(--light);  
     max-width: 80%;  
     margin: 0 auto; 
-    line-height: 1.5;  /* Adds spacing between lines of text */
-    margin-top: 10px;  /* Adds space above the paragraph */
+    line-height: 1.5;  /* spacing between lines text */
+    margin-top: 10px;  /* space above paragraph */
 }
 
-/* Responsive Design Adjustments */
+/* Responsive */
 @media (max-width: 768px) {
     .table-heading h3 {
-        font-size: 1.3rem;  /* Adjusts font size for smaller screens */
+        font-size: 1.3rem;
     }
 
     .table-heading {
-        margin-top: 30px;  /* Reduced margin for mobile view */
+        margin-top: 30px;  /* Reduced margin mobile */
     }
 
     .tbl-p {
         font-size: 0.9rem;  
-        padding: 0 15px;  /* Adds padding to the sides for smaller screens */
+        padding: 0 15px;  /* padding sides smaller screens */
     }
 }
 
@@ -830,12 +778,12 @@ h3 {
 
 @media (max-width: 480px) {
     .pagination {
-        gap: 10px; /* Further reduce space between buttons on very small screens */
+        gap: 10px; /* reduce space between buttons small screens */
     }
 
     .pagination button {
-        font-size: 12px; /* Even smaller font size on very small screens */
-        padding: 8px 12px; /* Adjust padding for very small screens */
+        font-size: 12px;
+        padding: 8px 12px; /* padding for very small screens */
     }
 }
 
@@ -848,16 +796,16 @@ h3 {
 .pie-heading h3 {
     font-size: 1.5rem;
     color: var(--primary); 
-    margin-bottom: 20px;  /* Adds space below the heading */
+    margin-bottom: 20px;  /* space below the heading */
 }
 
 .pie-heading i {
-    margin-left: 10px;  /* Adds space between text and icon */
-    color: var(--primary);  /* Icon color matching the heading */
+    margin-left: 10px;  /*  space between text and icon */
+    color: var(--primary); 
 }
 
 .container {
-    padding-top: 20px;  /* Adds space above the chart containers */
+    padding-top: 20px;  /* space above the chart  */
 }
 
 /* Responsive Design Adjustments */
@@ -867,7 +815,7 @@ h3 {
     }
 
     .pie-heading {
-        margin-top: 30px;  /* Reduced margin for mobile view */
+        margin-top: 30px;  /* Reduced margin for mobile */
     }
 }
 
@@ -880,27 +828,27 @@ h3 {
 .other-heading h3 {
     font-size: 1.5rem;  
     color: var(--primary);  
-    margin-bottom: 20px;  /* space below the heading */
+    margin-bottom: 20px;  /* space below heading */
 }
 
 .other-heading i {
     margin-left: 10px; 
-    color: var(--primary);  /* Icon color matching the heading */
+    color: var(--primary);
 }
 
-/* Ensure proper spacing between the chart containers and the new section */
+/* spacing between the chart containers and the new section */
 .container {
-    padding-top: 20px;  /* Adds space above the chart containers */
+    padding-top: 20px;  /*space above the chart containers */
 }
 
 /* Responsive Design Adjustments */
 @media (max-width: 768px) {
     .other-heading h3 {
-        font-size: 1.3rem;  /* Adjusts font size for smaller screens */
+        font-size: 1.3rem; 
     }
 
     .other-heading {
-        margin-top: 30px;  /* Reduced margin for mobile view */
+        margin-top: 30px;  /* margin for mobile view */
     }
 }
 

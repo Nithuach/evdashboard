@@ -547,76 +547,85 @@ document.getElementById('prev-page').addEventListener('click', () => {
   });
 
   function createChart(modelYears, electricRanges) {
-    const ctx = document.getElementById('lineChart').getContext('2d');
+  const ctx = document.getElementById('lineChart').getContext('2d');
     new Chart(ctx, {
-      type: 'line',
-      data: {
+        type: 'line',
+        data: {
         labels: modelYears,
         datasets: [{
-          label: 'Electric Range',
-          data: electricRanges,
-          borderColor: '#16eb5a',
-          backgroundColor: 'rgba(22, 235, 90, 0.2)',
-          fill: true,
+            label: 'Electric Range',
+            data: electricRanges,
+            borderColor: '#16eb5a',
+            backgroundColor: 'rgba(22, 235, 90, 0.2)',
+            fill: true,
         }],
-      },
-      options: {
+        },
+        options: {
         responsive: true,
         maintainAspectRatio: true,
-        aspectRatio: 1.5,
+        aspectRatio: window.innerWidth < 768 ? 1 : 1.5, // Square-like aspect ratio for mobile
         scales: {
-          y: {
+            y: {
             beginAtZero: true,
             grid: {
-              color: 'rgba(0, 0, 0, 0.1)',
+                color: 'rgba(0, 0, 0, 0.1)',
             },
             ticks: {
-              color: '#fff',
+                color: '#fff',
             },
             title: {
-              display: true,
-              text: 'Electric Range',
-              color: '#fff',
-              font: {
-                size: 16,
-              },
+                display: true,
+                text: 'Electric Range',
+                color: '#fff',
+                font: {
+                size: window.innerWidth < 768 ? 14 : 16, // Smaller font on mobile
+                },
             },
-          },
-          x: {
+            },
+            x: {
             grid: {
-              color: 'rgba(0, 0, 0, 0.1)',
+                color: 'rgba(0, 0, 0, 0.1)',
             },
             ticks: {
-              color: '#fff',
+                color: '#fff',
             },
             title: {
-              display: true,
-              text: 'Model Year',
-              color: '#fff',
-              font: {
-                size: 16,
-              },
+                display: true,
+                text: 'Model Year',
+                color: '#fff',
+                font: {
+                size: window.innerWidth < 768 ? 14 : 16, // Smaller font on mobile
+                },
             },
-          },
+            },
         },
         plugins: {
-          legend: {
+            legend: {
             position: 'top',
             labels: {
-              color: '#fff',
+                color: '#fff',
+                font: {
+                size: window.innerWidth < 768 ? 12 : 14, // Smaller font on mobile
+                },
             },
-          },
-          tooltip: {
+            },
+            tooltip: {
             backgroundColor: 'rgba(0, 0, 0, 0.7)',
             titleColor: '#fff',
             bodyColor: '#fff',
             borderColor: '#fff',
             borderWidth: 1,
-          },
+            titleFont: {
+                size: window.innerWidth < 768 ? 12 : 14,
+            },
+            bodyFont: {
+                size: window.innerWidth < 768 ? 12 : 14,
+            },
+            },
         },
-      },
+        },
     });
-  }
+    }
 
   // Bar Chart (Base MSRP vs Model Year)
   document.getElementById('csv-file').addEventListener('change', function (e) {
@@ -646,71 +655,71 @@ document.getElementById('prev-page').addEventListener('click', () => {
   });
 
   function createBarChart(modelYears, baseMSRPs) {
-    const barCtx = document.getElementById('barChart').getContext('2d');
+  const barCtx = document.getElementById('barChart').getContext('2d');
     new Chart(barCtx, {
-      type: 'bar',
-      data: {
+        type: 'bar',
+        data: {
         labels: modelYears,
         datasets: [{
-          label: 'Base MSRP',
-          data: baseMSRPs,
-          backgroundColor: '#16eb5a',
-          borderColor: '#000000',
-          borderWidth: 2,
+            label: 'Base MSRP',
+            data: baseMSRPs,
+            backgroundColor: '#16eb5a',
+            borderColor: '#000000',
+            borderWidth: 2,
         }],
-      },
-      options: {
+        },
+        options: {
         responsive: true,
         maintainAspectRatio: true,
-        aspectRatio: 1.5,
+        aspectRatio: window.innerWidth < 768 ? 1 : 1.5, // Larger height-to-width ratio for mobile
         scales: {
-          x: {
+            x: {
             ticks: {
-              color: '#FFFFFF',
-              font: {
+                color: '#FFFFFF',
+                font: {
                 weight: 'bold',
-                size: 12,
-              },
+                size: window.innerWidth < 768 ? 10 : 12, // Smaller font size for mobile
+                },
             },
             grid: {
-              color: '#16eb5a',
+                color: '#16eb5a',
             },
-          },
-          y: {
+            },
+            y: {
             ticks: {
-              color: '#FFFFFF',
-              font: {
+                color: '#FFFFFF',
+                font: {
                 weight: 'bold',
-                size: 12,
-              },
+                size: window.innerWidth < 768 ? 10 : 12, // Smaller font size for mobile
+                },
             },
             grid: {
-              color: '#16eb5a',
+                color: '#16eb5a',
             },
-          },
+            },
         },
         plugins: {
-          legend: {
+            legend: {
             labels: {
-              color: '#FFFFFF',
-              font: {
+                color: '#FFFFFF',
+                font: {
                 weight: 'bold',
-                size: 12,
-              },
+                size: window.innerWidth < 768 ? 10 : 12, // Smaller font size for mobile
+                },
             },
-          },
+            },
         },
         layout: {
-          padding: {
-            top: 20,
-            left: 20,
-            right: 20,
-            bottom: 20,
-          },
+            padding: {
+            top: window.innerWidth < 768 ? 10 : 20, // Smaller padding on mobile
+            left: 10,
+            right: 10,
+            bottom: window.innerWidth < 768 ? 10 : 20,
+            },
         },
-      },
+        },
     });
-  }
+    }
 
   // Pie Chart (Vehicle Makes Distribution)
   document.getElementById('csv-file').addEventListener('change', function (e) {
